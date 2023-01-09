@@ -1,0 +1,44 @@
+class Solution {
+private:
+    bool isSet(int &x,int idx){
+        return (1<<idx)&x;
+    }
+    void setBit(int &x,int idx){
+        x=x|(1<<idx);
+    }
+    void Utils(int k,int n,int currNum,int bitMask,vector<int> &possibleCombinations){
+        
+        if(k==0){
+            if(n==0){
+                possibleCombinations.push_back(bitMask);
+            }
+            return;
+        }
+        if(n==0) return;
+        if(currNum==10) return;
+        if(currNum<=n){
+            int newBitMask=bitMask;
+            setBit(newBitMask,currNum);
+            Utils(k-1,n-currNum,currNum+1,newBitMask,possibleCombinations);
+        }
+        Utils(k,n,currNum+1,bitMask,possibleCombinations);
+    }    
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+        int maxNum=9;
+        vector<int> possibleCombinations;
+        Utils(k,n,1,0,possibleCombinations);
+
+        vector<vector<int>> ans;
+        for(int &bitMask:possibleCombinations){
+            vector<int> combination;
+            for(int i=1;i<=maxNum;i++){
+                if(isSet(bitMask,i)){
+                    combination.push_back(i);
+                }
+            }
+            ans.push_back(combination);
+        }
+        return ans;
+    }
+};
